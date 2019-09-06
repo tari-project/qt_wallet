@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 //#include "components/qpeer.h"
 #include <string>
 #include "constructs/peer.h"
@@ -10,6 +11,9 @@
 #include <QSettings>
 #include "constructs/ThreadedWorker/workerservice.h"
 #include "constructs/myclass.h"
+
+#include "components/models/peermodel.h"
+#include "components/peerlist.h"
 
 int main(int argc, char *argv[])
 {
@@ -30,10 +34,16 @@ int main(int argc, char *argv[])
       hash.insert(key, settings.value(key).toString());
     }
 
-    //qmlRegisterType<Peer>("TariComponents",1,0,"Peer"); // for qml integration
+    qmlRegisterType<PeerModel>("Components",1,0,"PeerModel");
+    qmlRegisterUncreatableType<PeerList>("Components",1,0,"PeerList","QML Uncreatable");
+
+    PeerList peerlist;
+
     QGuiApplication app(argc, argv);
     qDebug()<<QThread::currentThreadId();
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty(QStringLiteral("Peers"),&peerlist);
+
     QObject::connect(&engine, &QQmlApplicationEngine::quit, &QGuiApplication::quit);
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
@@ -46,13 +56,15 @@ int main(int argc, char *argv[])
     auto walletSettings = new TariWalletSettings(hash);
     auto wallet = new TariWallet(nullptr,get_local_ip_(),walletSettings,nullptr,nullptr,5000);
     MyClass* m = new MyClass();
+
     foreach (QVariant peerJSON, JSON.first().toList())
     {
         QVariantMap data = peerJSON.toMap();
-        qDebug()<<data.value("screen_name").toString()+" "+data.value("pub_key").toString()+" "+data.value("address").toString();
         auto peer = new TariPeer(data.value("screen_name").toString(),data.value("pub_key").toString(),data.value("address").toString());
         wallet_add_peer(peer->getPointer(),wallet->getPointer());
+        peerlist.appendItem(peer); //TODO: .appendItems(wallet_get_peers()) after foreach, extend ffi
     }
+
     WorkerService WalletService(wallet,m,SLOT(saveText(QString))); //connect receiver
     WalletService.ProcessReceivedMessages();
 

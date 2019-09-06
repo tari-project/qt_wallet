@@ -5,12 +5,12 @@ TariPeer::TariPeer(QString screenName, QString publicKey, QString address)
     this->pointer = create_configpeer(screenName.toStdString().c_str(),publicKey.toStdString().c_str(),address.toStdString().c_str());
 }
 
-ConfigPeer* TariPeer::getPointer()
+ConfigPeer* TariPeer::getPointer() const
 {
     return this->pointer;
 }
 
-QString TariPeer::getScreenName()
+QString TariPeer::getScreenName() const
 {
     char* name_p = configpeer_get_screen_name(this->pointer);
     QString name = QString::fromUtf8(configpeer_get_screen_name(this->pointer));
@@ -18,7 +18,7 @@ QString TariPeer::getScreenName()
     return name;
 }
 
-QString TariPeer::getPublicKey()
+QString TariPeer::getPublicKey() const
 {
     char* pk_p = configpeer_get_public_key(this->pointer);
     QString pk = QString::fromUtf8(configpeer_get_public_key(this->pointer));
@@ -26,7 +26,7 @@ QString TariPeer::getPublicKey()
     return pk;
 }
 
-QString TariPeer::getAddress()
+QString TariPeer::getAddress() const
 {
     char* address_p = configpeer_get_address(this->pointer);
     QString address = QString::fromUtf8(configpeer_get_address(this->pointer));

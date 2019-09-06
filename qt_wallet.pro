@@ -17,7 +17,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 HEADERS += \
-    components/qpeer.h \
+    components/models/peermodel.h \
+    components/peerlist.h \
     constructs/ThreadedWorker/walletworker.h \
     constructs/ThreadedWorker/workerservice.h \
     constructs/ThreadedWorker/workerthread.h \
@@ -25,9 +26,11 @@ HEADERS += \
     constructs/peer.h \
     constructs/wallet.h \
     constructs/walletsettings.h \
-    helpers/jsonhelper.h
+    helpers/jsonhelper.h \
 
 SOURCES += \
+        components/models/peermodel.cpp \
+        components/peerlist.cpp \
         constructs/ThreadedWorker/walletworker.cpp \
         constructs/ThreadedWorker/workerservice.cpp \
         #constructs/ThreadedWorker/workerthread.cpp \ # necessary to seperate a generics implementation into seperate implementation files, cpp file is included directly in the header
@@ -36,7 +39,7 @@ SOURCES += \
         constructs/wallet.cpp \
         constructs/walletsettings.cpp \
         helpers/jsonhelper.cpp \
-        main.cpp
+        main.cpp \
 
 RESOURCES += qml.qrc
 

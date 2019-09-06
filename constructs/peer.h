@@ -10,10 +10,10 @@ private:
     ConfigPeer* pointer;
 public:
     TariPeer(QString screenName, QString publicKey, QString address);
-    ConfigPeer* getPointer();
-    QString getScreenName();
-    QString getPublicKey();
-    QString getAddress();
+    ConfigPeer* getPointer() const;
+    QString getScreenName() const;
+    QString getPublicKey() const;
+    QString getAddress() const;
     ~TariPeer();
 };
 
