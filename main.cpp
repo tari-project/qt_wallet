@@ -11,9 +11,10 @@
 #include <QSettings>
 #include "constructs/ThreadedWorker/workerservice.h"
 #include "constructs/myclass.h"
-
 #include "components/models/peermodel.h"
 #include "components/peerlist.h"
+#include "components/models/messagemodel.h"
+#include "components/messagelist.h"
 
 int main(int argc, char *argv[])
 {
@@ -36,14 +37,21 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<PeerModel>("Components",1,0,"PeerModel");
     qmlRegisterUncreatableType<PeerList>("Components",1,0,"PeerList","QML Uncreatable");
+    qmlRegisterType<MessageModel>("Components",1,0,"MessageModel");
+    qmlRegisterUncreatableType<MessageList>("Components",1,0,"MessageList","QML Uncreatable");
+    qRegisterMetaType<TariMessage*>("TariMessage*");
 
     PeerList peerlist;
+    MessageList messagelist;
+    MyClass m; //TODO: Refactor!!
 
     QGuiApplication app(argc, argv);
     qDebug()<<QThread::currentThreadId();
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty(QStringLiteral("Peers"),&peerlist);
 
+    engine.rootContext()->setContextProperty(QStringLiteral("Peers"),&peerlist);
+    engine.rootContext()->setContextProperty(QStringLiteral("Messages"),&messagelist);
+    engine.rootContext()->setContextProperty(QStringLiteral("MetaObj"),&m);
     QObject::connect(&engine, &QQmlApplicationEngine::quit, &QGuiApplication::quit);
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
@@ -55,17 +63,19 @@ int main(int argc, char *argv[])
 
     auto walletSettings = new TariWalletSettings(hash);
     auto wallet = new TariWallet(nullptr,get_local_ip_(),walletSettings,nullptr,nullptr,5000);
-    MyClass* m = new MyClass();
-
     foreach (QVariant peerJSON, JSON.first().toList())
     {
         QVariantMap data = peerJSON.toMap();
         auto peer = new TariPeer(data.value("screen_name").toString(),data.value("pub_key").toString(),data.value("address").toString());
         wallet_add_peer(peer->getPointer(),wallet->getPointer());
         peerlist.appendItem(peer); //TODO: .appendItems(wallet_get_peers()) after foreach, extend ffi
+        const char* l = QString("Test").toUtf8();
+        char* t = const_cast<char*>(l);
+        wallet_send_message(wallet->getPointer(),peer->getPointer(),t);
     }
+    m.init(wallet->getPointer(),&peerlist);
 
-    WorkerService WalletService(wallet,m,SLOT(saveText(QString))); //connect receiver
+    WorkerService WalletService(wallet,&messagelist,SLOT(appendItem(TariMessage*))); //connect receiver
     WalletService.ProcessReceivedMessages();
 
     int rc = app.exec();

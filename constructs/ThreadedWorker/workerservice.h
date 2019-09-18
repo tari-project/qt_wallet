@@ -14,7 +14,7 @@ public:
     explicit WorkerService(TariWallet* wallet, QObject *receiver, const char* slot, QObject *parent = nullptr);
 
 signals:
-    void WorkerEvent(const QString &event);
+    void WorkerEvent(TariMessage* event);
     void WorkerStop();
     void ProcessReceivedMessages();
 

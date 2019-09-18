@@ -31,6 +31,7 @@ signals:
     void preItemRemoved(int index);
     void postItemRemoved();
 
+
 public slots:
     void appendItem(TariPeer* peer);
     void removeItem(TariPeer* peer);

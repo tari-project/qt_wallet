@@ -5,6 +5,7 @@
 #include <QtDebug>
 #include <QThread>
 #include "constructs/wallet.h"
+#include "constructs/receivedmessage.h"
 
 class WalletWorker: public QObject
 {
@@ -14,7 +15,7 @@ public:
     explicit WalletWorker(TariWallet* wallet, QObject *receiver, const char* slot,QObject *parent = nullptr);
 
 public slots:
-    void WorkerEvent(const QString &event);
+    void WorkerEvent(TariMessage* event);
     void ProcessReceivedMessages();
     void WorkerStop();
 
@@ -25,7 +26,7 @@ private:
     Wallet* wallet = nullptr;
 
 signals:
-    void WorkerNotify(const QString &event);
+    void WorkerNotify(TariMessage* event);
 };
 
 
