@@ -71,9 +71,9 @@ int main(int argc, char *argv[])
         peerlist.appendItem(peer); //TODO: .appendItems(wallet_get_peers()) after foreach, extend ffi
         const char* l = QString("Test").toUtf8();
         char* t = const_cast<char*>(l);
-        wallet_send_message(wallet->getPointer(),peer->getPointer(),t);
+        //wallet_send_message(wallet->getPointer(),peer->getPointer(),t);
     }
-    m.init(wallet->getPointer(),&peerlist);
+    m.init(wallet,&peerlist);
 
     WorkerService WalletService(wallet,&messagelist,SLOT(appendItem(TariMessage*))); //connect receiver
     WalletService.ProcessReceivedMessages();

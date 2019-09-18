@@ -1,7 +1,7 @@
 #include "myclass.h"
 
 /*
-    Placeholder class, acts as dummy meta object for debugging
+    Placeholder class, acts as dummy class for experimenting/debugging, marked for removal with first merge into master
 */
 
 MyClass::MyClass(QObject *parent) : QObject(parent)
@@ -9,7 +9,7 @@ MyClass::MyClass(QObject *parent) : QObject(parent)
 
 }
 
-void MyClass::init(Wallet *w,PeerList* p)
+void MyClass::init(TariWallet *w,PeerList* p)
 {
     wallet = w;
     peerlist = p;
@@ -34,7 +34,7 @@ void MyClass::metaPass(QVariantMap map) {
             {
                 std::string str =  map.value("message").toString().toStdString();
                 const char* ptr = str.c_str();
-                wallet_send_message(wallet,p->getPointer(),const_cast<char*>(ptr));
+                wallet_send_message(wallet->getPointer(),p->getPointer(),const_cast<char*>(ptr));
                 delete p;
             }
         }

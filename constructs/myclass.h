@@ -12,10 +12,10 @@ class MyClass : public QObject
     Q_OBJECT
 public:
     explicit MyClass(QObject *parent = nullptr);
-    void init(Wallet* w, PeerList* p);
+    void init(TariWallet* w, PeerList* p);
     Q_INVOKABLE void metaPass (QVariantMap map);
 private:
-    Wallet* wallet;
+    TariWallet* wallet;
     PeerList* peerlist;
 signals:
 
