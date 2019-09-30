@@ -24,6 +24,5 @@ TWorker* WorkerThread<TWorker>::worker() const {
 
 template <typename TWorker>
 void WorkerThread<TWorker>::run() {
-    qDebug()<<QThread::currentThreadId(); //current thread identifier
     QThread::run();
 }

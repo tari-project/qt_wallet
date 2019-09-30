@@ -1,14 +1,13 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-//#include "components/qpeer.h"
 #include <string>
-#include "constructs/peer.h"
-#include "constructs/wallet.h"
-#include "helpers/jsonhelper.h"
 #include <thread>
 #include <QDir>
 #include <QSettings>
+#include "constructs/peer.h"
+#include "constructs/wallet.h"
+#include "helpers/jsonhelper.h"
 #include "constructs/ThreadedWorker/workerservice.h"
 #include "constructs/myclass.h"
 #include "components/models/peermodel.h"
