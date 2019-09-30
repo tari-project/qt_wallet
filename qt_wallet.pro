@@ -25,6 +25,7 @@ HEADERS += \
     constructs/ThreadedWorker/workerservice.h \
     constructs/ThreadedWorker/workerthread.h \
     constructs/message.h \
+    constructs/messagesender.h \
     constructs/myclass.h \
     constructs/peer.h \
     constructs/receivedmessage.h \
@@ -42,6 +43,7 @@ SOURCES += \
         constructs/ThreadedWorker/workerservice.cpp \
         #constructs/ThreadedWorker/workerthread.cpp \ # necessary to seperate a generics implementation into seperate implementation files, cpp file is included directly in the header
     constructs/message.cpp \
+    constructs/messagesender.cpp \
         constructs/myclass.cpp \
         constructs/peer.cpp \
     constructs/receivedmessage.cpp \

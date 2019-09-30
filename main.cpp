@@ -15,6 +15,7 @@
 #include "components/peerlist.h"
 #include "components/models/messagemodel.h"
 #include "components/messagelist.h"
+#include "constructs/messagesender.h"
 
 int main(int argc, char *argv[])
 {
@@ -43,7 +44,7 @@ int main(int argc, char *argv[])
 
     PeerList peerlist;
     MessageList messagelist;
-    MyClass m; //TODO: Refactor!!
+    MessageSender sender;
 
     QGuiApplication app(argc, argv);
     qDebug()<<QThread::currentThreadId();
@@ -51,7 +52,7 @@ int main(int argc, char *argv[])
 
     engine.rootContext()->setContextProperty(QStringLiteral("Peers"),&peerlist);
     engine.rootContext()->setContextProperty(QStringLiteral("Messages"),&messagelist);
-    engine.rootContext()->setContextProperty(QStringLiteral("MetaObj"),&m);
+    engine.rootContext()->setContextProperty(QStringLiteral("MetaObj"),&sender);
     QObject::connect(&engine, &QQmlApplicationEngine::quit, &QGuiApplication::quit);
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
@@ -69,11 +70,8 @@ int main(int argc, char *argv[])
         auto peer = new TariPeer(data.value("screen_name").toString(),data.value("pub_key").toString(),data.value("address").toString());
         wallet_add_peer(peer->getPointer(),wallet->getPointer());
         peerlist.appendItem(peer); //TODO: .appendItems(wallet_get_peers()) after foreach, extend ffi
-        const char* l = QString("Test").toUtf8();
-        char* t = const_cast<char*>(l);
-        //wallet_send_message(wallet->getPointer(),peer->getPointer(),t);
     }
-    m.init(wallet,&peerlist);
+    sender.init(wallet,&peerlist);
 
     WorkerService WalletService(wallet,&messagelist,SLOT(appendItem(TariMessage*))); //connect receiver
     WalletService.ProcessReceivedMessages();
